@@ -27,6 +27,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //checks to see if there is already a user logged in
+        // if user is logged in, skip log in & go to MainActivity
+        if(ParseUser.getCurrentUser() != null) {
+            goMainActivity();
+        }
+
         btnLogin = findViewById(R.id.btnLogin);
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
@@ -50,12 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-
-//        //checks to see if there is already a user logged in
-//        // if user is logged in, skip log in & go to MainActivity
-//        if(ParseUser.getCurrentUser() != null) {
-//            goMainActivity();
-//        }
 
     private void goSignUp() {
         Intent intent = new Intent(this, SignupActivity.class);
