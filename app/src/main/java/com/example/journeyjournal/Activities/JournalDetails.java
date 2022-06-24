@@ -1,4 +1,4 @@
-package com.example.journeyjournal;
+package com.example.journeyjournal.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TextView;
 
+
+import com.example.journeyjournal.ParseConnectorFiles.Journals;
+import com.example.journeyjournal.R;
 
 import org.parceler.Parcels;
 

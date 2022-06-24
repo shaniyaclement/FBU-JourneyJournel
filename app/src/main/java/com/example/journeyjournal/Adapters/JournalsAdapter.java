@@ -1,4 +1,4 @@
-package com.example.journeyjournal;
+package com.example.journeyjournal.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,17 +10,22 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import org.parceler.Parcels;
 
+import com.example.journeyjournal.ParseConnectorFiles.Journals;
+import com.example.journeyjournal.Activities.JournalDetails;
+import com.example.journeyjournal.R;
+
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
-public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
+public class JournalsAdapter extends RecyclerView.Adapter<JournalsAdapter.ViewHolder> {
 
     private Context context;
     private List<Journals> journal;
 
-    public PostsAdapter(Context context, List<Journals> journal) {
+    public JournalsAdapter(Context context, List<Journals> journal) {
         this.context = context;
         this.journal = journal;
     }

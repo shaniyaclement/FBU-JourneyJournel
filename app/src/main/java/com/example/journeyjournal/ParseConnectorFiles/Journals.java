@@ -1,4 +1,4 @@
-package com.example.journeyjournal;
+package com.example.journeyjournal.ParseConnectorFiles;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
