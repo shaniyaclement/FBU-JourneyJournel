@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".fragments.HomeFragment">
 
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
@@ -38,7 +39,7 @@
                         android:layout_width="50dp"
                         android:layout_height="40dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginEnd="64dp"
+                        android:layout_marginEnd="72dp"
                         android:background="@android:color/system_accent3_200"
                         android:scaleType="fitCenter"
                         android:src="@drawable/new_post_outline_24"

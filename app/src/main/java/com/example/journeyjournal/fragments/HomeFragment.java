@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.example.journeyjournal.Activities.ComposePostActivity;
 import com.example.journeyjournal.ParseConnectorFiles.Post;
 import com.example.journeyjournal.Adapters.PostsAdapter;
 import com.example.journeyjournal.Activities.LoginActivity;
@@ -30,7 +33,9 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
+    private SwipeRefreshLayout swipeContainer;
     private ImageButton ibLogout;
+    private ImageButton ibNewPost;
     RecyclerView rvPosts;
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
@@ -49,6 +54,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ibLogout = view.findViewById(R.id.ibLogout);
+        ibNewPost = view.findViewById(R.id.ibNewPost);
         rvPosts = view.findViewById(R.id.rvPosts);
         // initialize the array that will hold posts and create a PostsAdapter
         allPosts = new ArrayList<>();
@@ -58,6 +64,25 @@ public class HomeFragment extends Fragment {
         // set the layout manager on the recycler view
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         queryPosts();
+
+
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+
+                queryPosts();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         ibLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +94,20 @@ public class HomeFragment extends Fragment {
                 getActivity().finish();
             }
         });
+
+        ibNewPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goNewPost();
+            }
+        });
     }
+
+    private void goNewPost() {
+        Intent intent = new Intent(getActivity(), ComposePostActivity.class);
+        startActivity(intent);
+    }
+
 
     private void queryPosts() {
         // specify what type of data we want to query - Post.class
@@ -92,8 +130,11 @@ public class HomeFragment extends Fragment {
 //                    Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
 //                }
                 // save received posts to list and notify adapter of new data
+                allPosts.clear();
+                adapter.notifyDataSetChanged();
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
+                swipeContainer.setRefreshing(false);
             }
         });
     }
