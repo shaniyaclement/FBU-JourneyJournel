@@ -62,21 +62,21 @@ public class JournalsAdapter extends RecyclerView.Adapter<JournalsAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private EditText etTitle;
-        private TextView tvJEntry;
+        private TextView tvTitle;
+        private TextView tvEntry;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            etTitle = itemView.findViewById(R.id.etTitle);
-            tvJEntry = itemView.findViewById(R.id.tvJEntry);
+            tvTitle = itemView.findViewById(R.id.tvTitle);
+            tvEntry = itemView.findViewById(R.id.tvEntry);
         }
 
         public void bind(Journals journals) {
             // Bind the post data to the view elements
-            etTitle.setText(journals.getTitle());
-            tvJEntry.setText(journals.getEntry());
+            tvTitle.setText(journals.getTitle());
+            tvEntry.setText(journals.getEntry());
 
-            etTitle.setOnClickListener(new View.OnClickListener() {
+            tvTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(context, JournalDetails.class);

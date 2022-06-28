@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.HomeFragment">
+    tools:context=".fragments.FeedFragment">
+
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
@@ -20,7 +21,7 @@
                 android:id="@+id/postToolbar"
                 android:layout_width="419dp"
                 android:layout_height="53dp"
-                android:background="@android:color/system_accent3_200"
+                android:background="#D5C598"
                 android:fitsSystemWindows="true"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/actionBarTheme"
@@ -38,8 +39,8 @@
                         android:layout_width="50dp"
                         android:layout_height="40dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginEnd="64dp"
-                        android:background="@android:color/system_accent3_200"
+                        android:layout_marginEnd="72dp"
+                        android:background="#D5C598"
                         android:scaleType="fitCenter"
                         android:src="@drawable/new_post_outline_24"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -51,8 +52,8 @@
                         android:layout_height="40dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
+                        android:background="#D5C598"
                         android:scaleType="fitCenter"
-                        android:background="@android:color/system_accent3_200"
                         android:src="@drawable/ic_baseline_exit_to_app_24"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

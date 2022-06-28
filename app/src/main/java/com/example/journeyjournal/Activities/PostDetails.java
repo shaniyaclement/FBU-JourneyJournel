@@ -14,28 +14,41 @@ import com.parse.ParseFile;
 import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
+import java.util.Date;
+
 public class PostDetails extends AppCompatActivity {
 
     Post post;
-    TextView tvBody;
-    TextView tvUser;
-    ImageView ivImg;
+    TextView tvDescription;
+    TextView tvUsername;
+    ImageView ivImage;
+    TextView tvUsernameBottom;
+    TextView tvCreatedAt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details);
 
-        post = Parcels.unwrap(getIntent().getParcelableExtra("post"));
-        tvBody = findViewById(R.id.tvBody);
-        tvUser = findViewById(R.id.tvUser);
-        ivImg = findViewById(R.id.ivImg);
+        post = Parcels.unwrap(this.getIntent().getParcelableExtra("post"));
+        tvDescription = findViewById(R.id.tvDescription);
+        tvUsername = findViewById(R.id.tvUsername);
+        ivImage = findViewById(R.id.ivImage);
+        tvUsernameBottom = findViewById(R.id.tvUsernameBottom);
+        tvCreatedAt = findViewById(R.id.tvCreatedAt);
 
-        tvBody.setText(post.getDescription());
-        tvUser.setText(post.getUser().getUsername());
+
+        tvDescription.setText(post.getDescription());
+        tvUsername.setText(post.getUser().getUsername());
+        tvUsernameBottom.setText(post.getUser().getUsername());
         ParseFile image = post.getImage();
         if (image != null) {
-            Glide.with(this).load(image.getUrl()).into(ivImg);}
+            Glide.with(this).load(image.getUrl()).into(ivImage);}
+
+        // getting how long ago the post was made and updating textview
+        Date createdAt = post.getCreatedAt();
+        String timeAgo = Post.timeAgo(createdAt);
+        tvCreatedAt.setText(timeAgo);
 
     }
 }

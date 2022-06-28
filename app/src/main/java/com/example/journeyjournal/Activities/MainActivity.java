@@ -9,7 +9,9 @@ import android.view.MenuItem;
 
 import com.example.journeyjournal.R;
 import com.example.journeyjournal.fragments.ComposeFragment;
+import com.example.journeyjournal.fragments.FeedFragment;
 import com.example.journeyjournal.fragments.HomeFragment;
+import com.example.journeyjournal.fragments.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,9 +32,12 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_compose:
                         fragmentToShow = new ComposeFragment();
                         break;
-//                    case R.id.action_profile:
-//                        fragmentToShow = new ProfileFragment();
-//                        break;
+                    case R.id.action_feed:
+                        fragmentToShow = new FeedFragment();
+                        break;
+                    case R.id.action_profile:
+                        fragmentToShow = new ProfileFragment();
+                        break;
                     default: break;
                 }
                 if (fragmentToShow != null) {

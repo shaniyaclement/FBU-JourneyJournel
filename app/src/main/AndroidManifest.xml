@@ -25,6 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JourneyJournal"
         tools:targetApi="31">
+
         <activity
             android:name=".Activities.ComposePostActivity"
             android:exported="false" />
@@ -41,22 +42,24 @@
 
         <activity
             android:name=".Activities.JournalDetails"
-            android:exported="false" />
+            android:exported="false"/>
         <activity
             android:name=".Activities.SignupActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.JourneyJournal.NoActionBar"/>
         <activity
             android:name=".Activities.LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.JourneyJournal.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MainActivity" />
-        <activity android:name=".Activities.PostDetails" />
-
+        <activity android:name=".Activities.MainActivity"
+            android:theme="@style/Theme.JourneyJournal.NoActionBar" />
+        <activity android:name=".Activities.PostDetails"/>
 
         <meta-data
             android:name="com.parse.SERVER_URL"
@@ -68,5 +71,6 @@
             android:name="com.parse.CLIENT_KEY"
             android:value="@string/back4app_client_key" />
     </application>
+
 
 </manifest>

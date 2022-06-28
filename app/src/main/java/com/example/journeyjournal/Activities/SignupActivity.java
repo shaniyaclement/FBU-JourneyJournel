@@ -18,8 +18,8 @@ import com.parse.SignUpCallback;
 public class SignupActivity extends AppCompatActivity {
 
     private static final String TAG = "SignUpActivity";
-    private EditText etUser;
-    private EditText etPass;
+    private EditText etUsername;
+    private EditText etPassword;
     private Button btnRegister;
 
     @Override
@@ -27,15 +27,15 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        etUser = findViewById(R.id.etUser);
-        etPass = findViewById(R.id.etPass);
+        etUsername = findViewById(R.id.etUsername);
+        etPassword = findViewById(R.id.etPassword);
         btnRegister = findViewById(R.id.btnRegister);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = etUser.getText().toString();
-                String password = etPass.getText().toString();
+                String username = etUsername.getText().toString();
+                String password = etPassword.getText().toString();
                 signupUser(username, password);
             }
         });
@@ -54,8 +54,8 @@ public class SignupActivity extends AppCompatActivity {
                 }
                 Log.i(TAG, "User signup was successful");
                 Toast.makeText(SignupActivity.this, "User signup was successful", Toast.LENGTH_SHORT).show();
-                etPass.setText("");
-                etUser.setText("");
+                etPassword.setText("");
+                etUsername.setText("");
                 goMainActivity();
             }
         });

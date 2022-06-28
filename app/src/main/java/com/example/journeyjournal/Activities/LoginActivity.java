@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.journeyjournal.R;
@@ -18,10 +19,10 @@ import com.parse.ParseUser;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
-    private Button btnLogin;
     private EditText etUsername;
     private EditText etPassword;
-    private Button btnSignup;
+    Button btnLogin;
+    TextView tvSignup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +35,10 @@ public class LoginActivity extends AppCompatActivity {
             goMainActivity();
         }
 
-        btnLogin = findViewById(R.id.btnLogin);
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
-        btnSignup = findViewById(R.id.btnSignup);
+        btnLogin = findViewById(R.id.btnLogin);
+        tvSignup = findViewById(R.id.tvSignup);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -48,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser(username, password);
             }});
 
-        btnSignup.setOnClickListener(new View.OnClickListener() {
+        tvSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "SignUp on click");

@@ -15,8 +15,8 @@ import org.parceler.Parcels;
 public class JournalDetails extends AppCompatActivity {
 
     Journals journals;
-    EditText etTitle;
-    TextView etEntry;
+    TextView tvTitle;
+    TextView tvEntry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +24,11 @@ public class JournalDetails extends AppCompatActivity {
         setContentView(R.layout.journal_details);
 
         journals = Parcels.unwrap(getIntent().getParcelableExtra("journals"));
-        etEntry = findViewById(R.id.etEntry);
-        etTitle = findViewById(R.id.etTitle);
+        tvEntry = findViewById(R.id.tvEntry);
+        tvTitle = findViewById(R.id.tvTitle);
 
-        etTitle.setText(journals.getTitle());
-        etEntry.setText(journals.getEntry());
+        tvTitle.setText(journals.getTitle());
+        tvEntry.setText(journals.getEntry());
 
     }
 }

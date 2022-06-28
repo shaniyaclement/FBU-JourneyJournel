@@ -6,6 +6,7 @@ import androidx.core.content.FileProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.journeyjournal.ParseConnectorFiles.Post;
+import com.example.journeyjournal.ParseConnectorFiles.User;
 import com.example.journeyjournal.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -64,7 +65,7 @@ public class ComposePostActivity extends AppCompatActivity {
                     Toast.makeText(ComposePostActivity.this, "No image", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                ParseUser currentUser = ParseUser.getCurrentUser();
+                User currentUser = (User) ParseUser.getCurrentUser();
                 savePost(description, currentUser, photoFile);
             }
         });
@@ -76,17 +77,16 @@ public class ComposePostActivity extends AppCompatActivity {
         });
 
     }
-
+    // launches implicit intent to open the phone camera and take the photo for the post
     private void launchCamera() {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Create a File reference for future access
         photoFile = getPhotoFileUri(photoFileName);
 
-        // wrap File object into a content provider
-        // required for API >= 24
-        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
-        Uri fileProvider = FileProvider.getUriForFile(ComposePostActivity.this, "com.codepath.fileprovider", photoFile);
+        // wrap File object into a content provider, needed for URI >= 24
+        Uri fileProvider = FileProvider.getUriForFile(this, "com.codepath.fileprovider", photoFile);
+        //make app a file provider
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
@@ -119,8 +119,7 @@ public class ComposePostActivity extends AppCompatActivity {
 
     // Returns the File for a photo stored on disk given the fileName
     private File getPhotoFileUri(String fileName) {
-        // Get safe storage directory for photos
-        // Use `getExternalFilesDir` on Context to access package-specific directories.
+        // Get safe storage directory for photos using `getExternalFilesDir` on Context to access package-specific directories
         // This way, we don't need to request external read/write runtime permissions.
         File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
@@ -135,7 +134,7 @@ public class ComposePostActivity extends AppCompatActivity {
     }
 
     // create a new post and saves to app
-    private void savePost(String description, ParseUser currentUser, File photoFile) {
+    private void savePost(String description, User currentUser, File photoFile) {
         Post post = new Post();
         post.setDescription(description);
         post.setImage(new ParseFile(this.photoFile));

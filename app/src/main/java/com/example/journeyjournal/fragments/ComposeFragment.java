@@ -34,7 +34,7 @@ public class ComposeFragment extends Fragment {
 
     private static final String TAG = "ComposeFragment";
     private SwipeRefreshLayout swipeContainer;
-    private EditText etJournalTitle;
+    private TextView etJournalTitle;
     private TextView tvEntry;
     private Button btnAddEntry;
     RecyclerView rvJournals;

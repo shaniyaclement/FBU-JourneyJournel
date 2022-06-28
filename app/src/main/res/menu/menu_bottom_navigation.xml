@@ -9,6 +9,12 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_feed"
+        android:icon="@drawable/home_outline_24"
+        android:title="Feed"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_compose"
         android:icon="@drawable/new_post_outline_24"
         android:title="Compose"

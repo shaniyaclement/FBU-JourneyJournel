@@ -12,6 +12,7 @@ public class App extends Application {
         super.onCreate();
         ParseObject.registerSubclass(Post.class);
         ParseObject.registerSubclass(Journals.class);
+        ParseObject.registerSubclass(User.class);
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(getString(R.string.back4app_app_id))
                 .clientKey(getString(R.string.back4app_client_key))

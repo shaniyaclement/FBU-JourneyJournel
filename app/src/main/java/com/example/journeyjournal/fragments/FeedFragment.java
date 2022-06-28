@@ -14,9 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.example.journeyjournal.Activities.ComposePostActivity;
 import com.example.journeyjournal.ParseConnectorFiles.Post;
@@ -31,8 +29,8 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
-    private static final String TAG = "HomeFragment";
+public class FeedFragment extends Fragment {
+    private static final String TAG = "FeedFragment";
     private SwipeRefreshLayout swipeContainer;
     private ImageButton ibLogout;
     private ImageButton ibNewPost;
@@ -40,13 +38,13 @@ public class HomeFragment extends Fragment {
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
 
-    public HomeFragment() {
+    public FeedFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        return inflater.inflate(R.layout.fragment_feed, container, false);
     }
 
     @Override

@@ -20,6 +20,7 @@ import com.example.journeyjournal.R;
 
 import org.parceler.Parcels;
 
+import java.util.Date;
 import java.util.List;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
@@ -66,18 +67,28 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private TextView tvUsername;
         private ImageView ivImage;
         private TextView tvDescription;
+        private TextView tvUsernameBottom;
+        private TextView tvCreatedAt;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             ivImage = itemView.findViewById(R.id.ivImage);
+            tvUsernameBottom = itemView.findViewById(R.id.tvUsernameBottom);
+            tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
         }
 
         public void bind(Post post) {
             // Bind the post data to the view elements
             tvDescription.setText(post.getDescription());
             tvUsername.setText(post.getUser().getUsername());
+            tvUsernameBottom.setText(post.getUser().getUsername());
+
+            Date createdAt = post.getCreatedAt();
+            String duration = Post.timeAgo(createdAt);
+            tvCreatedAt.setText(duration);
+
             ParseFile image = post.getImage();
 
             if (image != null) {
