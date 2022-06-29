@@ -30,13 +30,12 @@ public class PostDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details);
 
-        post = Parcels.unwrap(this.getIntent().getParcelableExtra("post"));
+        post = Parcels.unwrap(this.getIntent().getParcelableExtra("Post"));
         tvDescription = findViewById(R.id.tvDescription);
         tvUsername = findViewById(R.id.tvUsername);
         ivImage = findViewById(R.id.ivImage);
         tvUsernameBottom = findViewById(R.id.tvUsernameBottom);
         tvCreatedAt = findViewById(R.id.tvCreatedAt);
-
 
         tvDescription.setText(post.getDescription());
         tvUsername.setText(post.getUser().getUsername());
