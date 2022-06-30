@@ -3,23 +3,42 @@ package com.example.journeyjournal.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.journeyjournal.ParseConnectorFiles.User;
 import com.example.journeyjournal.R;
 import com.example.journeyjournal.fragments.ComposeFragment;
 import com.example.journeyjournal.fragments.FeedFragment;
 import com.example.journeyjournal.fragments.HomeFragment;
 import com.example.journeyjournal.fragments.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.ParseUser;
 
+// activity that holds bottom navigation bar and allows it ot be accessible
 public class MainActivity extends AppCompatActivity {
+
+    public static final String TAG = "MainActivity";
+
+    HomeFragment homeFragment = new HomeFragment();
+    FeedFragment feedFragment = new FeedFragment();
+    ComposeFragment composeFragment = new ComposeFragment();
+    ProfileFragment profileFragment = new ProfileFragment();
+
+    // declaring items in layout
+    public BottomNavigationView bottomNavigationView;
+
+    // setting up fragments
+    final FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // bottom navigation bar functionality
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -27,16 +46,16 @@ public class MainActivity extends AppCompatActivity {
                 Fragment fragmentToShow = null;
                 switch (item.getItemId()) {
                     case R.id.action_home:
-                        fragmentToShow = new HomeFragment();
+                        fragmentToShow = homeFragment;
                         break;
                     case R.id.action_compose:
-                        fragmentToShow = new ComposeFragment();
+                        fragmentToShow = composeFragment;
                         break;
                     case R.id.action_feed:
-                        fragmentToShow = new FeedFragment();
+                        fragmentToShow = feedFragment;
                         break;
                     case R.id.action_profile:
-                        fragmentToShow = new ProfileFragment();
+                        fragmentToShow = profileFragment;
                         break;
                     default: break;
                 }
@@ -47,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         bottomNavigationView.setSelectedItemId(R.id.action_home);
+    }
+
+    public void goToProfileFragment(ParseUser user) {
+        // makes sure the profile navigation leads to the user whose image was selected
+        bottomNavigationView.setSelectedItemId(R.id.action_profile);
+        profileFragment.user = (User) user;
     }
 }
 

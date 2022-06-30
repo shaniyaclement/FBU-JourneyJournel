@@ -12,10 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.journeyjournal.Activities.MainActivity;
 import com.example.journeyjournal.ParseConnectorFiles.Post;
 import com.example.journeyjournal.Activities.PostDetails;
+import com.example.journeyjournal.ParseConnectorFiles.User;
 import com.parse.ParseFile;
 import com.example.journeyjournal.R;
+import com.parse.ParseUser;
 
 
 import org.parceler.Parcels;
@@ -26,6 +29,8 @@ import java.util.List;
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
     private Context context;
     private List<Post> posts;
+
+    public User user = (User) ParseUser.getCurrentUser();
 
     public PostsAdapter(Context context, List<Post> posts) {
         this.context = context;
@@ -69,6 +74,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private TextView tvDescription;
         private TextView tvUsernameBottom;
         private TextView tvCreatedAt;
+        private ImageView ivProfileImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,6 +83,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivImage = itemView.findViewById(R.id.ivImage);
             tvUsernameBottom = itemView.findViewById(R.id.tvUsernameBottom);
             tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
+            ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
         }
 
         public void bind(Post post) {
@@ -91,17 +98,33 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
             ParseFile image = post.getImage();
 
+            // loads image into ImageView for post
             if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivImage);
-                ivImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(context, PostDetails.class);
-                        i.putExtra("post", Parcels.wrap(post));
-                        context.startActivity(i);
-                    }
-                });
+                // click image and it navigates to post details
+//                ivImage.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent i = new Intent(context, PostDetails.class);
+//                        i.putExtra("post", Parcels.wrap(post));
+//                        context.startActivity(i);
+//                    }
+                //});
             }
+
+            // display profile picture on post in RecyclerView
+            ParseFile profileImage = user.getProfileImage();
+            if (profileImage != null) {
+                Glide.with(context).load(profileImage.getUrl()).circleCrop().into(ivProfileImage);}
+
+            // clicking on profile pic --> profile page
+            ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity activity = (MainActivity) context;
+                    activity.goToProfileFragment(post.getUser());
+                }
+            });
         }
     }
 }

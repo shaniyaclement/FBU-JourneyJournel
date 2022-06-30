@@ -12,11 +12,11 @@ public class User extends ParseUser {
     public static final String KEY_USERNAME = "username";
     public static final String KEY_BIO = "bio";
 
-    public ParseFile getProfilePic() {
+    public ParseFile getProfileImage() {
         return getParseFile(KEY_PROFILE_PIC);
     }
 
-    public void setProfilePic(ParseFile profilePic) {
+    public void setProfileImage(ParseFile profilePic) {
         put(KEY_PROFILE_PIC, profilePic);
     }
 

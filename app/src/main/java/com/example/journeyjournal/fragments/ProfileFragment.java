@@ -115,9 +115,9 @@ public class ProfileFragment extends HelperFragment {
         tvUsernameProfile.setText(user.getUsername());
         tvBio.setText(user.getBio());
 
-        ParseFile profilePic = user.getProfilePic();
-        if (profilePic != null) {
-            Glide.with(this).load(profilePic.getUrl())
+        ParseFile profileImage = user.getProfileImage();
+        if (profileImage != null) {
+            Glide.with(this).load(profileImage.getUrl())
                     .circleCrop()
                     .into(ivProfileImageProfile);}
 
@@ -177,7 +177,7 @@ public class ProfileFragment extends HelperFragment {
                 Glide.with(this).load(takenImage).circleCrop().into(ivProfileImageProfile);
 
                 ParseFile newPic = new ParseFile(photoFile);
-                user.setProfilePic(newPic);
+                user.setProfileImage(newPic);
                 user.saveInBackground();
 
             } else {
