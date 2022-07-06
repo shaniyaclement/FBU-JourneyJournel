@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -73,15 +74,9 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.action_profile);
         profileFragment.user = (User) user;
     }
-}
 
-//        btnJournalPage = findViewById(R.id.btnJournalPage);
-//        ParseObject firstObject = new  ParseObject("TestClass");
-//        firstObject.put("message","Hey! Parse is now connected");
-//        firstObject.saveInBackground(e -> {
-//            if (e != null){
-//                Log.e(TAG, e.getLocalizedMessage());
-//            } else{
-//                Log.d(TAG,"Object saved.");
-//            }
-//        });
+    public void goToCommentCompose() {
+        Intent intent = new Intent(this, CommentActivity.class);
+        startActivity(intent);
+    }
+}

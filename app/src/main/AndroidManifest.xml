@@ -25,7 +25,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JourneyJournal"
         tools:targetApi="31">
-
+        <activity
+            android:name=".Calendar"
+            android:exported="false" />
+        <activity
+            android:name=".CommentActivity"
+            android:exported="false" />
         <activity
             android:name=".Activities.ComposePostActivity"
             android:exported="false" />
@@ -42,11 +47,11 @@
 
         <activity
             android:name=".Activities.JournalDetails"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".Activities.SignupActivity"
             android:exported="false"
-            android:theme="@style/Theme.JourneyJournal.NoActionBar"/>
+            android:theme="@style/Theme.JourneyJournal.NoActionBar" />
         <activity
             android:name=".Activities.LoginActivity"
             android:exported="true"
@@ -57,9 +62,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MainActivity"
+        <activity
+            android:name=".Activities.MainActivity"
             android:theme="@style/Theme.JourneyJournal.NoActionBar" />
-        <activity android:name=".Activities.PostDetails"/>
+        <activity android:name=".Activities.PostDetails" />
+        <activity
+            android:name=".Activities.CommentActivity"
+            android:theme="@style/Theme.JourneyJournal.NoActionBar" />
 
         <meta-data
             android:name="com.parse.SERVER_URL"
@@ -71,6 +80,5 @@
             android:name="com.parse.CLIENT_KEY"
             android:value="@string/back4app_client_key" />
     </application>
-
 
 </manifest>

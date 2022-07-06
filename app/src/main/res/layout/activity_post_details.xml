@@ -42,7 +42,7 @@
         app:layout_constraintTop_toBottomOf="@+id/ivImage">
 
         <ImageButton
-            android:id="@+id/ibCommentFeed"
+            android:id="@+id/ibComment"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/ufi_comment" />

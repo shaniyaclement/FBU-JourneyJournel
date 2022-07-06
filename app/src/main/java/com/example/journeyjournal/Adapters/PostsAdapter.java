@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -75,6 +77,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private TextView tvUsernameBottom;
         private TextView tvCreatedAt;
         private ImageView ivProfileImage;
+        private ImageButton ibComment;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -84,6 +88,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvUsernameBottom = itemView.findViewById(R.id.tvUsernameBottom);
             tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
+            ibComment = itemView.findViewById(R.id.ibComment);
         }
 
         public void bind(Post post) {
@@ -123,6 +128,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 public void onClick(View v) {
                     MainActivity activity = (MainActivity) context;
                     activity.goToProfileFragment(post.getUser());
+                }
+            });
+
+            // clicking comment button --> comment page
+            ibComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity activity = (MainActivity) context;
+                    activity.goToCommentCompose();
                 }
             });
         }
