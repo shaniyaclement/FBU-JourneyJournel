@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_home"
-        android:icon="@drawable/home_outline_24"
+        android:icon="@drawable/remind_icon"
         android:title="Home"
         app:showAsAction="ifRoom" />
 
@@ -16,7 +16,7 @@
 
     <item
         android:id="@+id/action_compose"
-        android:icon="@drawable/new_post_outline_24"
+        android:icon="@drawable/pen"
         android:title="Compose"
         app:showAsAction="ifRoom" />
 

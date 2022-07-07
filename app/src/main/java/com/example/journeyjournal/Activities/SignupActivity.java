@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.journeyjournal.ParseConnectorFiles.User;
 import com.example.journeyjournal.R;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -42,7 +43,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void signupUser(String username, String password) {
-        ParseUser user = new ParseUser();
+        User user = new User();
         user.setUsername(username);
         user.setPassword(password);
         user.signUpInBackground(new SignUpCallback() {

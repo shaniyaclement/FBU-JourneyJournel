@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.journeyjournal.Activities.ComposePostActivity;
+import com.example.journeyjournal.Activities.MainActivity;
 import com.example.journeyjournal.ParseConnectorFiles.Post;
 import com.example.journeyjournal.Adapters.PostsAdapter;
 import com.example.journeyjournal.Activities.LoginActivity;
@@ -42,6 +43,15 @@ public class FeedFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        // query posts from the database
+        Log.i(TAG, "onResume");
+        adapter.clear();
+        queryPosts(0);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_feed, container, false);
@@ -61,7 +71,7 @@ public class FeedFragment extends Fragment {
         rvPosts.setAdapter(adapter);
         // set the layout manager on the recycler view
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-        queryPosts();
+        queryPosts(0);
 
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
@@ -72,8 +82,7 @@ public class FeedFragment extends Fragment {
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-
-                queryPosts();
+                queryPosts(0);
             }
         });
         // Configure the refreshing colors
@@ -107,13 +116,13 @@ public class FeedFragment extends Fragment {
     }
 
 
-    private void queryPosts() {
+    private void queryPosts(int i) {
         // specify what type of data we want to query - Post.class
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         // include data referred by user key
         query.include(Post.KEY_USER);
         query.setLimit(20);
-        query.whereEqualTo("user", ParseUser.getCurrentUser());
+        query.setSkip(i);
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
         // start an asynchronous call for posts
@@ -124,12 +133,11 @@ public class FeedFragment extends Fragment {
                     Log.e(TAG, "Issue with getting posts", e);
                     return;
                 }
-//                for (Post post : posts) {
-//                    Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
-//                }
+                for (Post post : posts) {
+                    Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
+                }
                 // save received posts to list and notify adapter of new data
                 allPosts.clear();
-                adapter.notifyDataSetChanged();
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);

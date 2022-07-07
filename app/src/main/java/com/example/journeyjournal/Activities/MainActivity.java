@@ -75,8 +75,4 @@ public class MainActivity extends AppCompatActivity {
         profileFragment.user = (User) user;
     }
 
-    public void goToCommentCompose() {
-        Intent intent = new Intent(this, CommentActivity.class);
-        startActivity(intent);
-    }
 }

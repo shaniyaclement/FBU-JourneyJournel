@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +45,15 @@ public class ComposeFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        // query journals from the database
+        Log.i(TAG, "onResume");
+        adapter.clear();
+        queryJournals(0);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -70,7 +78,7 @@ public class ComposeFragment extends Fragment {
         rvJournals.setLayoutManager(linearLayoutManager);
         //rvPosts.setLayoutManager(new LinearLayoutManager(this));
         // query posts from Parse SDK
-        queryJournals();
+        queryJournals(0);
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -81,7 +89,7 @@ public class ComposeFragment extends Fragment {
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
 
-                queryJournals();
+                queryJournals(0);
             }
         });
         // Configure the refreshing colors
@@ -121,6 +129,7 @@ public class ComposeFragment extends Fragment {
                         Log.i(TAG, "Post was successful");
                         etJournalTitle.setText("");
                         tvEntry.setText("");
+                        queryJournals(0);
                     }
                 });
 
@@ -130,7 +139,7 @@ public class ComposeFragment extends Fragment {
     }
 
 
-    private void queryJournals() {
+    private void queryJournals(int i) {
         // specify what type of data we want to query - Journals.class
         ParseQuery<Journals> query = ParseQuery.getQuery(Journals.class);
         // include data referred by user key

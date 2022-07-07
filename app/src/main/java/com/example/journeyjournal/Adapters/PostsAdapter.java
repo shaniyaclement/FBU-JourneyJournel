@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.journeyjournal.Activities.CommentActivity;
 import com.example.journeyjournal.Activities.MainActivity;
 import com.example.journeyjournal.ParseConnectorFiles.Post;
 import com.example.journeyjournal.Activities.PostDetails;
@@ -69,7 +70,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView tvUsername;
         private ImageView ivImage;
@@ -82,6 +83,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            //initialize elements
             tvUsername = itemView.findViewById(R.id.tvUsername);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             ivImage = itemView.findViewById(R.id.ivImage);
@@ -89,6 +91,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             ibComment = itemView.findViewById(R.id.ibComment);
+
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Post post) {
@@ -135,10 +139,34 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ibComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity activity = (MainActivity) context;
-                    activity.goToCommentCompose();
+                    // move from here to the comment compose page
+                    Intent intent = new Intent(context, CommentActivity.class);
+                    // include the post we are moving from details
+                    intent.putExtra("post", post);
+                    context.startActivity(intent);
                 }
             });
+        }
+
+        @Override
+        public void onClick(View v) {
+            // get item position
+            int position = getAdapterPosition();
+
+            // check if the position is valid
+            if (position != RecyclerView.NO_POSITION) {
+                // accessing post at this position
+                Post post = posts.get(position);
+
+                // create intent for the new activity
+                Intent intent = new Intent(context, PostDetails.class);
+
+                // serialize the movie using Parceler, use its short name as a key
+                intent.putExtra("post", post);
+
+                // show the activity
+                context.startActivity(intent);
+            }
         }
     }
 }

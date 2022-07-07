@@ -27,9 +27,9 @@ Connects user with lifestyle content from other journalers, reminders for the da
 
 * Forced log in to connect user to their data
 * User can share content 
-* User can interact with other users by liking and commenting on posts
+* User can interact with other users by commenting on posts
 * User can write and save private journals
-* User can set goals in a check list 
+* User can set goals
 
 **Optional Nice-to-have Stories**
 

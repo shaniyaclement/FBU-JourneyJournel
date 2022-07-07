@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.journeyjournal">
+    package="com.example.journeyjournal"> <!-- Permissions needed to read calendar data and modify the data -->
+    <uses-sdk android:minSdkVersion="14" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <queries>
 
@@ -25,11 +28,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JourneyJournal"
         tools:targetApi="31">
+
+        <!--
+             TODO: Before you run your application, you need a Google Maps API key.
+
+             To get one, follow the directions here:
+
+                https://developers.google.com/maps/documentation/android-sdk/get-api-key
+
+             Once you have your API key (it starts with "AIza"), define a new property in your
+             project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the
+             "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="YOUR_API_KEY" />
+
         <activity
-            android:name=".Calendar"
+            android:name=".Activities.RemindersActivity"
             android:exported="false" />
         <activity
-            android:name=".CommentActivity"
+            android:name=".Activities.CommentActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.ComposePostActivity"
@@ -66,9 +85,7 @@
             android:name=".Activities.MainActivity"
             android:theme="@style/Theme.JourneyJournal.NoActionBar" />
         <activity android:name=".Activities.PostDetails" />
-        <activity
-            android:name=".Activities.CommentActivity"
-            android:theme="@style/Theme.JourneyJournal.NoActionBar" />
+
 
         <meta-data
             android:name="com.parse.SERVER_URL"
