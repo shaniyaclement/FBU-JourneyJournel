@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.journeyjournal.Activities.ComposePostActivity;
-import com.example.journeyjournal.Activities.MainActivity;
 import com.example.journeyjournal.ParseConnectorFiles.Post;
 import com.example.journeyjournal.Adapters.PostsAdapter;
 import com.example.journeyjournal.Activities.LoginActivity;
@@ -63,7 +62,7 @@ public class FeedFragment extends Fragment {
 
         ibLogout = view.findViewById(R.id.ibLogout);
         ibNewPost = view.findViewById(R.id.ibNewPost);
-        rvPosts = view.findViewById(R.id.rvPosts);
+        rvPosts = view.findViewById(R.id.rvReminders);
         // initialize the array that will hold posts and create a PostsAdapter
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);

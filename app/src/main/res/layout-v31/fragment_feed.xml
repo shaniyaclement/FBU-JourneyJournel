@@ -64,7 +64,7 @@
             </androidx.appcompat.widget.Toolbar>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvPosts"
+                android:id="@+id/rvReminders"
                 android:layout_width="402dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"

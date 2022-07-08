@@ -35,8 +35,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        Context context = parent.getContext();
-
         // inflating the comment XML layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.item_comment, parent, false);
@@ -47,8 +45,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     public void onBindViewHolder(@NonNull CommentsAdapter.ViewHolder holder, int position) {
         Comment comment = comments.get(position);
         holder.bind(comment);
-//        holder.tvComment.setText(comment.getComment());
-//        holder.tvUsername.setText(comment.getCommenter().getUsername());
     }
 
     @Override
@@ -72,7 +68,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         }
 
         public void bind(Comment comment) {
-            // Bind the post data to the view elements
+            // Bind the comment data to the view elements
             tvComment.setText(comment.getComment());
             tvUsername.setText(comment.getCommenter().getUsername());
 

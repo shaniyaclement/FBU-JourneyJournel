@@ -8,7 +8,7 @@
     tools:context=".fragments.HomeFragment">
 
     <CalendarView
-        android:id="@+id/calendarView2"
+        android:id="@+id/calendar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

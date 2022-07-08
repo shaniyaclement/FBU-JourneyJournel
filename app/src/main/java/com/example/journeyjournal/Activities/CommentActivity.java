@@ -90,7 +90,6 @@ public class CommentActivity extends AppCompatActivity {
                         }
                         etComment.setText("");
 
-
                     }
                 });
             }
@@ -121,6 +120,7 @@ public class CommentActivity extends AppCompatActivity {
                 }
 
                 // save received comments to list and notify adapter of change
+                allComments.clear();
                 allComments.addAll(comments);
                 adapter.notifyDataSetChanged();
             }
