@@ -29,6 +29,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         this.posts = posts;
     }
 
+
     @NonNull
     @Override
     public ProfileAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -57,7 +58,13 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
             super(itemView);
             ivUserPost = itemView.findViewById(R.id.ivUserPost);
 
-            ivUserPost.setOnClickListener(this);
+            ivUserPost.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, PostDetails.class);
+                    context.startActivity(intent);
+                }
+            });
         }
 
         public void bind(Post post) {

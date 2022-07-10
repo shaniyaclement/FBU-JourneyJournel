@@ -11,11 +11,14 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.example.journeyjournal.Adapters.ReminderAdapter;
+import com.example.journeyjournal.ParseConnectorFiles.Post;
 import com.example.journeyjournal.ParseConnectorFiles.Reminder;
+import com.example.journeyjournal.ParseConnectorFiles.User;
 import com.example.journeyjournal.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,7 @@ public class RemindersActivity extends AppCompatActivity {
 
     ImageButton ibReminder;
 
+    public User user = (User) ParseUser.getCurrentUser();
     @Override
     public void onResume() {
         super.onResume();
@@ -77,6 +81,8 @@ public class RemindersActivity extends AppCompatActivity {
         query.include(Reminder.KEY_USER);
         // limit query to latest 20 reminders
         query.setLimit(20);
+        query.whereEqualTo(Reminder.KEY_USER, user);
+
         // order reminders by create (newest first)
         query.addDescendingOrder("createdAt");
         // start asynchronous call for reminders

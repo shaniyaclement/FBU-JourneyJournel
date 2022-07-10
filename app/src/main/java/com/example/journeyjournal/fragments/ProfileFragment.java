@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.example.journeyjournal.Activities.EditProfile;
 import com.example.journeyjournal.ParseConnectorFiles.User;
-import com.example.journeyjournal.Utilities.EndlessScrollListener;
 import com.example.journeyjournal.ParseConnectorFiles.Post;
 import com.example.journeyjournal.Adapters.ProfileAdapter;
 import com.example.journeyjournal.R;
@@ -42,16 +42,32 @@ public class ProfileFragment extends HelperFragment {
     ProfileAdapter adapter;
     List<Post> allPosts;
     SwipeRefreshLayout swipeContainer;
-    TextView tvNumPostsNum;
-    TextView tvUsernameProfile;
+    TextView tvPostsNum;
+    TextView tvProfileUsername;
     int numPostsByThisUser;
     ImageView ivProfileImageProfile;
     TextView tvBio;
     Button btnFollow;
+    Button btnEditProfile;
 
     public User user = (User) ParseUser.getCurrentUser();
+    int numsFollowers;
+    int numsFollowing;
+    TextView tvFollowersNum;
+    TextView tvFollowingNum;
+
 
     public ProfileFragment() {}
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // query posts from the database
+        Log.i(TAG, "onResume");
+        tvProfileUsername.setText("");
+        tvBio.setText("");
+        displayUserInfo();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,11 +94,22 @@ public class ProfileFragment extends HelperFragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), numberOfColumns);
 
         swipeContainer = view.findViewById(R.id.swipeContainer);
-        tvNumPostsNum = view.findViewById(R.id.tvNumPostsNum);
+        tvPostsNum = view.findViewById(R.id.tvPostsNum);
+        tvFollowersNum = view.findViewById(R.id.tvFollowersNum);
+        tvFollowingNum = view.findViewById(R.id.tvFollowingNum);
         ivProfileImageProfile = view.findViewById(R.id.ivProfileImageProfile);
-        tvUsernameProfile = view.findViewById(R.id.tvUsernameProfile);
+        tvProfileUsername = view.findViewById(R.id.tvProfileUsername);
         tvBio = view.findViewById(R.id.tvBio);
         btnFollow = view.findViewById(R.id.btnFollow);
+        btnEditProfile = view.findViewById(R.id.btnEditProfile);
+
+        btnEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), EditProfile.class);
+                startActivity(intent);
+            }
+        });
 
         rvProfile.setLayoutManager(gridLayoutManager);
 
@@ -112,7 +139,7 @@ public class ProfileFragment extends HelperFragment {
     }
 
     private void displayUserInfo() {
-        tvUsernameProfile.setText(user.getUsername());
+        tvProfileUsername.setText(user.getUsername());
         tvBio.setText(user.getBio());
 
         ParseFile profileImage = user.getProfileImage();
@@ -125,6 +152,7 @@ public class ProfileFragment extends HelperFragment {
             btnFollow.setVisibility(View.VISIBLE);
         } else {
             btnFollow.setVisibility(View.GONE);
+            btnEditProfile.setVisibility(View.VISIBLE);
         }
     }
 
@@ -154,8 +182,17 @@ public class ProfileFragment extends HelperFragment {
                     Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                 }
 
+                // sets Number of posts
                 numPostsByThisUser = posts.size();
-                tvNumPostsNum.setText(String.valueOf(numPostsByThisUser));
+                tvPostsNum.setText(String.valueOf(numPostsByThisUser));
+
+                //sets number of followers
+                numsFollowers = posts.size();
+                tvFollowersNum.setText(String.valueOf(numsFollowers));
+
+                //sets number of following
+                numsFollowing = posts.size();
+                tvFollowingNum.setText(String.valueOf(numsFollowing));
 
                 allPosts.clear();
                 allPosts.addAll(posts);
@@ -176,6 +213,7 @@ public class ProfileFragment extends HelperFragment {
 
                 Glide.with(this).load(takenImage).circleCrop().into(ivProfileImageProfile);
 
+                // Add new profile image in parse
                 ParseFile newPic = new ParseFile(photoFile);
                 user.setProfileImage(newPic);
                 user.saveInBackground();

@@ -89,6 +89,7 @@ public class CommentActivity extends AppCompatActivity {
                             return;
                         }
                         etComment.setText("");
+                        queryComments();
 
                     }
                 });

@@ -25,7 +25,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     private Context context;
     private List<Comment> comments;
 
-    public User user = (User) ParseUser.getCurrentUser();
+//    public User user = (User) ParseUser.getCurrentUser();
 
     public CommentsAdapter(Context context, List<Comment> comments) {
         this.context = context;
@@ -73,6 +73,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
             tvUsername.setText(comment.getCommenter().getUsername());
 
             // display profile picture on comment in RecyclerView
+            User user = (User) comment.getCommenter();
+
             ParseFile profileImage = user.getProfileImage();
             if (profileImage != null) {
                 Glide.with(context).load(profileImage.getUrl()).circleCrop().into(ivProfileImage);}

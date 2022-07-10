@@ -33,8 +33,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     private Context context;
     private List<Post> posts;
 
-    public User user = (User) ParseUser.getCurrentUser();
-
+//    public User user = (User) ParseUser.getCurrentUser();
     public PostsAdapter(Context context, List<Post> posts) {
         this.context = context;
         this.posts = posts;
@@ -70,7 +69,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvUsername;
         private ImageView ivImage;
@@ -92,7 +91,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             ibComment = itemView.findViewById(R.id.ibComment);
 
-            itemView.setOnClickListener(this);
         }
 
         public void bind(Post post) {
@@ -122,6 +120,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             }
 
             // display profile picture on post in RecyclerView
+            User user = (User) post.getUser();
             ParseFile profileImage = user.getProfileImage();
             if (profileImage != null) {
                 Glide.with(context).load(profileImage.getUrl()).circleCrop().into(ivProfileImage);}
@@ -146,27 +145,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     context.startActivity(intent);
                 }
             });
-        }
-
-        @Override
-        public void onClick(View v) {
-            // get item position
-            int position = getAdapterPosition();
-
-            // check if the position is valid
-            if (position != RecyclerView.NO_POSITION) {
-                // accessing post at this position
-                Post post = posts.get(position);
-
-                // create intent for the new activity
-                Intent intent = new Intent(context, PostDetails.class);
-
-                // serialize the movie using Parceler, use its short name as a key
-                intent.putExtra("post", post);
-
-                // show the activity
-                context.startActivity(intent);
-            }
         }
     }
 }

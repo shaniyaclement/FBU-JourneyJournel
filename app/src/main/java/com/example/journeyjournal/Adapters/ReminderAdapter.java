@@ -14,6 +14,8 @@ import com.example.journeyjournal.ParseConnectorFiles.User;
 import com.example.journeyjournal.R;
 import com.parse.ParseUser;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHolder> {
@@ -56,16 +58,19 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
 
         // add XML element
         public TextView tvRemind;
+        public TextView tvNotes;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // initialize element
             tvRemind = (TextView) itemView.findViewById(R.id.tvRemind);
+            tvNotes = (TextView) itemView.findViewById(R.id.tvNotes);
         }
 
         public void bind(Reminder reminder) {
             // Bind the reminder data to the view element
             tvRemind.setText(reminder.getReminder());
+            tvNotes.setText(reminder.getNotes());
         }
     }
 }
