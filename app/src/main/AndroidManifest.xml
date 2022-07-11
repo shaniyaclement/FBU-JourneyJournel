@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.journeyjournal">
-    <!-- Permissions needed to read calendar data and modify the data -->
-    <!-- <uses-sdk android:minSdkVersion="29" /> -->
+    package="com.example.journeyjournal"> <!-- Permissions needed to read calendar data and modify the data -->
+    <uses-sdk android:minSdkVersion="29" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
 
     <queries>
 
@@ -28,6 +31,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JourneyJournal"
         tools:targetApi="31">
+        <activity
+            android:name=".Activities.ComposeJournal"
+            android:exported="false" />
         <activity
             android:name=".Activities.EditProfile"
             android:exported="false" />
@@ -71,9 +77,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MainActivity" />
+        <activity android:name=".Activities.MainActivity"
+            android:theme="@style/Theme.JourneyJournal.NoActionBar"/>
         <activity android:name=".Activities.PostDetails" />
-
 
         <meta-data
             android:name="com.parse.SERVER_URL"
@@ -86,7 +92,8 @@
             android:value="@string/back4app_client_key" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
+            android:value="@string/MAPS_API_KEY" />
+
     </application>
 
 </manifest>

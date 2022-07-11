@@ -29,6 +29,16 @@
         app:layout_constraintTop_toBottomOf="@+id/etDescription" />
 
     <Button
+        android:id="@+id/btnUpload"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Upload Image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnImage" />
+
+    <Button
         android:id="@+id/btnPost"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -46,7 +56,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btnPost"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnImage"
+        app:layout_constraintTop_toBottomOf="@+id/btnUpload"
         tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

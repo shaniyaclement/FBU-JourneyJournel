@@ -2,36 +2,45 @@ package com.example.journeyjournal.Activities;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.journeyjournal.Adapters.ReminderAdapter;
 import com.example.journeyjournal.ParseConnectorFiles.Reminder;
 import com.example.journeyjournal.ParseConnectorFiles.User;
 import com.example.journeyjournal.R;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -51,13 +60,15 @@ public class ComposeReminder extends AppCompatActivity {
 
     // XML elements
     RecyclerView rvReminders;
-    LinearLayout datePick;
     TextView tvDone;
+    TextView tvDateEntry;
+    TextView tvLocation;
     EditText etRemind;
     EditText etNotes;
+    EditText etLocation;
     ImageView ivLocation;
-    Button btnDate;
-    TextView tvDateEntry;
+
+    // date picker variable
     Date date;
 
     public User user = (User) ParseUser.getCurrentUser();
@@ -68,17 +79,17 @@ public class ComposeReminder extends AppCompatActivity {
         setContentView(R.layout.activity_compose_reminder);
 
         // attached variables to XML elements
-        datePick = findViewById(R.id.datePick);
         ivLocation = findViewById(R.id.ivLocation);
         tvDone = findViewById(R.id.tvDone);
+        tvLocation = findViewById(R.id.tvLocation);
         etRemind = findViewById(R.id.etRemind);
         etNotes = findViewById(R.id.etNotes);
+        etLocation = findViewById(R.id.etLocation);
         rvReminders = findViewById(R.id.rvReminders);
-        btnDate = findViewById(R.id.btnDate);
         tvDateEntry = findViewById(R.id.tvDateEntry);
 
-        String apiKey = "";
         // Initialize the SDK
+        String apiKey = getString(R.string.MAPS_API_KEY);
         Places.initialize(getApplicationContext(), apiKey);
 
         // Create a new PlacesClient instance
@@ -108,20 +119,48 @@ public class ComposeReminder extends AppCompatActivity {
             }
         });
 
+
+        // Create a new token for the autocomplete session. Pass this to FindAutocompletePredictionsRequest,
+        // and once again when the user makes a selection (for example when calling fetchPlace()).
+        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
+
+        // Create a RectangularBounds object.
+        RectangularBounds bounds = RectangularBounds.newInstance(
+                new LatLng(-33.880490, 151.184363),
+                new LatLng(-33.858754, 151.229596));
+        // Use the builder to create a FindAutocompletePredictionsRequest.
+        String query = "";
+        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                // Call either setLocationBias() OR setLocationRestriction().
+                .setLocationBias(bounds)
+                //.setLocationRestriction(bounds)
+                .setOrigin(new LatLng(-33.8749937,151.2041382))
+                .setCountries("AU", "NZ")
+                .setTypeFilter(TypeFilter.ADDRESS)
+                .setSessionToken(token)
+                .setQuery(query)
+                .build();
+
+        placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
+            for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
+                Log.i(TAG, prediction.getPlaceId());
+                Log.i(TAG, prediction.getPrimaryText(null).toString());
+            }
+        }).addOnFailureListener((exception) -> {
+            if (exception instanceof ApiException) {
+                ApiException apiException = (ApiException) exception;
+                Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+            }
+        });
+
+
+
+
         // construct Material Date Picker
         MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
         materialDateBuilder.setTitleText("Select Remind Date");
         final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
 
-        // show date picker when Layout  is clicked
-        datePick.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // getSupportFragmentManager() to interact with the fragments associated with the material design date picker tag is to get any error in logcat
-                        materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
-                    }
-                });
         // show date picker when Layout  is clicked
         tvDateEntry.setOnClickListener(
                 new View.OnClickListener() {
