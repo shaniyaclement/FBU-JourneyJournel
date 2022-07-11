@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 
 import com.example.journeyjournal.Adapters.ReminderAdapter;
@@ -54,6 +56,7 @@ public class RemindersActivity extends AppCompatActivity {
             }
         });
 
+
         rvReminders = findViewById(R.id.rvReminders);
 
         allReminders = new ArrayList<>();
@@ -71,6 +74,7 @@ public class RemindersActivity extends AppCompatActivity {
     private void goComposeReminder() {
         Intent intent = new Intent(this, ComposeReminder.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
 
     }
 

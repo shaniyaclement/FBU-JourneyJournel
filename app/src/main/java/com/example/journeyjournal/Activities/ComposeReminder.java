@@ -234,6 +234,10 @@ public class ComposeReminder extends AppCompatActivity {
                 queryReminders();
             }
         });
+
+        Intent intent = new Intent(ComposeReminder.this, RemindersActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.right_out, R.anim.left_in);
     }
 
     private void queryReminders() {
