@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -35,7 +35,7 @@
                     android:fitsSystemWindows="true">
 
                     <ImageButton
-                        android:id="@+id/ibNewPost"
+                        android:id="@+id/ibAddJournal"
                         android:layout_width="50dp"
                         android:layout_height="40dp"
                         android:layout_marginTop="8dp"
@@ -82,4 +82,4 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

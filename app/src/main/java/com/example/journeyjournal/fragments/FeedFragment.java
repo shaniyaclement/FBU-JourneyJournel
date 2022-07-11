@@ -61,7 +61,7 @@ public class FeedFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ibLogout = view.findViewById(R.id.ibLogout);
-        ibNewPost = view.findViewById(R.id.ibNewPost);
+        ibNewPost = view.findViewById(R.id.ibAddJournal);
         rvPosts = view.findViewById(R.id.rvReminders);
         // initialize the array that will hold posts and create a PostsAdapter
         allPosts = new ArrayList<>();
