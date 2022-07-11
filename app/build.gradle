@@ -58,6 +58,10 @@ dependencies {
 
     //google places
     implementation 'com.google.android.libraries.places:places:2.6.0'
+    implementation 'com.google.maps.android:android-maps-utils:2.3.0'
+    implementation 'com.google.maps.android:maps-utils-ktx:3.4.0'
+
+
 
     implementation "com.google.android.material:material:1.3.0-alpha02"
 

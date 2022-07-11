@@ -103,15 +103,6 @@
             android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
-            <TextView
-                android:id="@+id/tvDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:foregroundGravity="bottom"
-                android:text="@string/date"
-                android:textSize="16sp" />
-
             <LinearLayout
                 android:id="@+id/datePick"
                 android:layout_width="match_parent"
@@ -123,8 +114,9 @@
                     android:id="@+id/tvDateEntry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingEnd="3dp"
-                    android:text="@string/click_to_select_date" />
+                    android:padding="3dp"
+                    android:text="@string/click_to_select_date"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -144,14 +136,6 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:importantForAutofill="no" />
-
-            <ImageView
-                android:id="@+id/ivLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                tools:srcCompat="@tools:sample/avatars"
-                android:contentDescription="@string/location_icon" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"

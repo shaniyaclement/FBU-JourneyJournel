@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.journeyjournal"> <!-- Permissions needed to read calendar data and modify the data -->
+    package="com.example.journeyjournal">
+    <!-- Permissions needed to read calendar data and modify the data -->
     <uses-sdk android:minSdkVersion="29" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -78,7 +79,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.MainActivity"
-            android:theme="@style/Theme.JourneyJournal.NoActionBar"/>
+            />
         <activity android:name=".Activities.PostDetails" />
 
         <meta-data

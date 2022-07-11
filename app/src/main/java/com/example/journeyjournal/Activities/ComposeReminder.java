@@ -66,10 +66,12 @@ public class ComposeReminder extends AppCompatActivity {
     EditText etRemind;
     EditText etNotes;
     EditText etLocation;
-    ImageView ivLocation;
 
     // date picker variable
     Date date;
+
+    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
+
 
     public User user = (User) ParseUser.getCurrentUser();
 
@@ -79,7 +81,6 @@ public class ComposeReminder extends AppCompatActivity {
         setContentView(R.layout.activity_compose_reminder);
 
         // attached variables to XML elements
-        ivLocation = findViewById(R.id.ivLocation);
         tvDone = findViewById(R.id.tvDone);
         tvLocation = findViewById(R.id.tvLocation);
         etRemind = findViewById(R.id.etRemind);
@@ -100,6 +101,13 @@ public class ComposeReminder extends AppCompatActivity {
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
+//        autocompleteFragment.setTypeFilter(TypeFilter.ADDRESS);
+        autocompleteFragment.setTypeFilter(TypeFilter.ESTABLISHMENT);
+//        autocompleteFragment.setLocationBias(RectangularBounds.newInstance(
+//                new LatLng(-33.880490, 151.18363),
+//                new LatLng(-33.858754, 151.229596)));
+        autocompleteFragment.setCountries("USA");
+
         // Specify the types of place data to return.
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
 
@@ -109,6 +117,7 @@ public class ComposeReminder extends AppCompatActivity {
             public void onPlaceSelected(@NonNull Place place) {
                 // TODO: Get info about the selected place.
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+                etLocation.setText(place.getAddress());
             }
 
 
@@ -120,38 +129,10 @@ public class ComposeReminder extends AppCompatActivity {
         });
 
 
-        // Create a new token for the autocomplete session. Pass this to FindAutocompletePredictionsRequest,
-        // and once again when the user makes a selection (for example when calling fetchPlace()).
-        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
 
-        // Create a RectangularBounds object.
-        RectangularBounds bounds = RectangularBounds.newInstance(
-                new LatLng(-33.880490, 151.184363),
-                new LatLng(-33.858754, 151.229596));
-        // Use the builder to create a FindAutocompletePredictionsRequest.
-        String query = "";
-        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                // Call either setLocationBias() OR setLocationRestriction().
-                .setLocationBias(bounds)
-                //.setLocationRestriction(bounds)
-                .setOrigin(new LatLng(-33.8749937,151.2041382))
-                .setCountries("AU", "NZ")
-                .setTypeFilter(TypeFilter.ADDRESS)
-                .setSessionToken(token)
-                .setQuery(query)
-                .build();
 
-        placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
-            for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-                Log.i(TAG, prediction.getPlaceId());
-                Log.i(TAG, prediction.getPrimaryText(null).toString());
-            }
-        }).addOnFailureListener((exception) -> {
-            if (exception instanceof ApiException) {
-                ApiException apiException = (ApiException) exception;
-                Log.e(TAG, "Place not found: " + apiException.getStatusCode());
-            }
-        });
+
+
 
 
 
@@ -180,8 +161,7 @@ public class ComposeReminder extends AppCompatActivity {
                     public void onPositiveButtonClick(Object selection) {
 
                         // save selected date to date variable
-                        Date selectedDate = (Date) new Date((Long) materialDatePicker.getSelection());
-                        date = selectedDate;
+                        date = new Date((Long) materialDatePicker.getSelection());
                         // format the dates in simple format
                         SimpleDateFormat simpleFormat = new SimpleDateFormat("MMM dd, yyyy");
                         // display it with setText
@@ -272,4 +252,24 @@ public class ComposeReminder extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i(TAG, status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
 }
