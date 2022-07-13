@@ -32,8 +32,8 @@ import java.util.List;
 public class FeedFragment extends Fragment {
     private static final String TAG = "FeedFragment";
     private SwipeRefreshLayout swipeContainer;
-    private ImageButton ibLogout;
-    private ImageButton ibNewPost;
+    ImageButton ibLogout;
+    ImageButton ibNewPost;
     RecyclerView rvPosts;
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
@@ -47,7 +47,7 @@ public class FeedFragment extends Fragment {
         // query posts from the database
         Log.i(TAG, "onResume");
         adapter.clear();
-        queryPosts(0);
+        queryPosts();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class FeedFragment extends Fragment {
         rvPosts.setAdapter(adapter);
         // set the layout manager on the recycler view
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-        queryPosts(0);
+        queryPosts();
 
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
@@ -81,7 +81,7 @@ public class FeedFragment extends Fragment {
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-                queryPosts(0);
+                queryPosts();
             }
         });
         // Configure the refreshing colors
@@ -115,13 +115,13 @@ public class FeedFragment extends Fragment {
     }
 
 
-    private void queryPosts(int i) {
+    private void queryPosts() {
         // specify what type of data we want to query - Post.class
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         // include data referred by user key
         query.include(Post.KEY_USER);
         query.setLimit(20);
-        query.setSkip(i);
+        query.setSkip(0);
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
         // start an asynchronous call for posts

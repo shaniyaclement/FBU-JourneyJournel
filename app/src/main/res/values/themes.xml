@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.JourneyJournal" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/themeTan</item>
+        <item name="colorPrimaryVariant">@color/themeTan</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -12,6 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="textInputStyle">@style/AppTextField</item>
+
     </style>
 
     <style name="Theme.JourneyJournal.NoActionBar">
@@ -22,4 +24,8 @@
     <style name="Theme.JourneyJournal.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.JourneyJournal.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTextField" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <item name="boxBackgroundColor">@android:color/white</item>
+    </style>
 </resources>

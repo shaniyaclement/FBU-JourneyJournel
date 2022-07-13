@@ -11,11 +11,17 @@ import java.util.Date;
 
 @ParseClassName("Reminder")
 public class Reminder extends ParseObject {
+    public static final String KEY_ID = "objectId";
     public static final String KEY_USER = "user";
     public static final String KEY_NOTES = "notes";
     public static final String KEY_REMIND = "remind";
     public static final String KEY_LOCATION = "location";
     public static final String KEY_DATE = "date";
+    private static final String KEY_NAME = "locationName";
+
+    public String getKeyId() {return getString(KEY_ID);}
+
+    public void setKeyId(String id) { put(KEY_ID, id);}
 
     public ParseUser getUser() {
         return (ParseUser) getParseObject(KEY_USER);
@@ -45,6 +51,14 @@ public class Reminder extends ParseObject {
         put(KEY_LOCATION, location);
     }
 
+    public String getLocationName() {
+        return getString(KEY_NAME);
+    }
+
+    public void setLocationName(String locationName) {
+        put(KEY_NAME, locationName);
+    }
+
     public Date getRemindDate() {
         return getDate(KEY_DATE);
     }
@@ -54,7 +68,14 @@ public class Reminder extends ParseObject {
     }
 
     public String getFormattedDate(Date date) {
-        Format format = new SimpleDateFormat("mm/dd/yyyy");
-        return format.format(date);
+        SimpleDateFormat simpleFormat = new SimpleDateFormat("MMM dd, yyyy");
+        return simpleFormat.format(date);
     }
+
+    public String getDateString(Reminder remind) {
+        Date date = remind.getRemindDate();
+        String string = getFormattedDate(date);
+        return string;
+    }
+
 }

@@ -27,11 +27,6 @@ public class PostDetails extends AppCompatActivity {
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
     public User user = (User) ParseUser.getCurrentUser();
-    // Your code to refresh the list here.
-// Make sure you call swipeContainer.setRefreshing(false)
-// once the network request has completed successfully.
-
-
 
     @Override
     public void onResume() {
@@ -39,7 +34,7 @@ public class PostDetails extends AppCompatActivity {
         // query posts from the database
         Log.i(TAG, "onResume");
         adapter.clear();
-        queryPosts(0);
+        queryPosts();
     }
 
     @Override
@@ -55,15 +50,15 @@ public class PostDetails extends AppCompatActivity {
         rvProfile.setAdapter(adapter);
         // set the layout manager on the recycler view
         rvProfile.setLayoutManager(new LinearLayoutManager(this));
-        queryPosts(0);
+        queryPosts();
 
 
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        swipeContainer = findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                queryPosts(0);
+                queryPosts();
             }
         });
         // Configure the refreshing colors
@@ -74,7 +69,7 @@ public class PostDetails extends AppCompatActivity {
 
     }
 
-    private void queryPosts(int i) {
+    private void queryPosts() {
         // specify what type of data we want to query - Post.class
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         // include data referred by user key
@@ -84,7 +79,7 @@ public class PostDetails extends AppCompatActivity {
 
         query.setLimit(20);
         // how many posts to skip before getting to current
-        query.setSkip(i);
+        query.setSkip(0);
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
         // start an asynchronous call for posts

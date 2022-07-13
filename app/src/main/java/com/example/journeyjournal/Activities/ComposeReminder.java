@@ -1,46 +1,36 @@
 package com.example.journeyjournal.Activities;
 
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.journeyjournal.Adapters.ReminderAdapter;
 import com.example.journeyjournal.ParseConnectorFiles.Reminder;
 import com.example.journeyjournal.ParseConnectorFiles.User;
 import com.example.journeyjournal.R;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.RectangularBounds;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -54,6 +44,8 @@ import java.util.List;
 public class ComposeReminder extends AppCompatActivity {
 
     private static final String TAG = "ComposeReminder";
+    public static String locationName;
+    private static String dateString;
 
     protected ReminderAdapter adapter;
     protected List<Reminder> allReminders;
@@ -65,15 +57,20 @@ public class ComposeReminder extends AppCompatActivity {
     TextView tvLocation;
     EditText etRemind;
     EditText etNotes;
-    EditText etLocation;
 
     // date picker variable
     Date date;
 
-    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
+    // location variables
+    ParseGeoPoint location;
+    double longitude;
+    double latitude;
+
+    private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
 
 
     public User user = (User) ParseUser.getCurrentUser();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +82,6 @@ public class ComposeReminder extends AppCompatActivity {
         tvLocation = findViewById(R.id.tvLocation);
         etRemind = findViewById(R.id.etRemind);
         etNotes = findViewById(R.id.etNotes);
-        etLocation = findViewById(R.id.etLocation);
         rvReminders = findViewById(R.id.rvReminders);
         tvDateEntry = findViewById(R.id.tvDateEntry);
 
@@ -93,48 +89,19 @@ public class ComposeReminder extends AppCompatActivity {
         String apiKey = getString(R.string.MAPS_API_KEY);
         Places.initialize(getApplicationContext(), apiKey);
 
-        // Create a new PlacesClient instance
-        PlacesClient placesClient = Places.createClient(this);
 
-
-        // Initialize the AutocompleteSupportFragment.
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-
-//        autocompleteFragment.setTypeFilter(TypeFilter.ADDRESS);
-        autocompleteFragment.setTypeFilter(TypeFilter.ESTABLISHMENT);
-//        autocompleteFragment.setLocationBias(RectangularBounds.newInstance(
-//                new LatLng(-33.880490, 151.18363),
-//                new LatLng(-33.858754, 151.229596)));
-        autocompleteFragment.setCountries("USA");
-
-        // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
-
-        // Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+        tvLocation.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPlaceSelected(@NonNull Place place) {
-                // TODO: Get info about the selected place.
-                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
-                etLocation.setText(place.getAddress());
-            }
-
-
-            @Override
-            public void onError(@NonNull Status status) {
-                // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
+            public void onClick(View v) {
+                // Set the fields to specify which types of place data to
+                // return after the user has made a selection.
+                List<Place.Field> fields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.ID, Place.Field.NAME);
+                // Start the autocomplete intent.
+                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                    .build(ComposeReminder.this);
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
             }
         });
-
-
-
-
-
-
-
-
 
 
         // construct Material Date Picker
@@ -186,20 +153,22 @@ public class ComposeReminder extends AppCompatActivity {
             public void onClick(View v) {
                 String remind = etRemind.getText().toString();
                 String notes = etNotes.getText().toString();
-//                ParseGeoPoint location = new ParseGeoPoint(latitude, longitude);
+                location = new ParseGeoPoint(latitude, longitude);
 
-                addReminder(remind, notes, user, date);
+                addReminder(remind, notes, user, date, location);
             }
         });
     }
 
-    private void addReminder(String remind, String notes, ParseUser user, Date date) {
+
+    private void addReminder(String remind, String notes, ParseUser user, Date date, ParseGeoPoint location) {
         Reminder reminder = new Reminder();
         reminder.setReminder(remind);
         reminder.setNotes(notes);
         reminder.setUser(user);
-        reminder.setRemindDate(date);
-//        reminder.setLocation(location);
+        reminder.setLocationName(locationName);
+        if(date!= null){reminder.setRemindDate(date);}
+        if(location != null) {reminder.setLocation(location);}
 
         reminder.saveInBackground(new SaveCallback() {
             @Override
@@ -212,6 +181,7 @@ public class ComposeReminder extends AppCompatActivity {
                 etNotes.setText("");
                 tvDateEntry.setText("");
                 queryReminders();
+                finish();
             }
         });
 
@@ -257,11 +227,29 @@ public class ComposeReminder extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                Place place = Autocomplete.getPlaceFromIntent(data);
-                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+                Place place = null;
+                if (data != null) {
+                    place = Autocomplete.getPlaceFromIntent(data);
+                }
+                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId() + ", " + place.getLatLng());
+                
+                locationName = place.getName();
+
+                final LatLng latLng = place.getLatLng();
+                if (latLng != null) {
+                    longitude = latLng.longitude;
+                    latitude = latLng.latitude;
+                    tvLocation.setText(place.getName());
+                } else{
+                    Log.i(TAG, "latLng is null");
+                }
+
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
-                Status status = Autocomplete.getStatusFromIntent(data);
+                Status status = null;
+                if (data != null) {
+                    status = Autocomplete.getStatusFromIntent(data);
+                }
                 Log.i(TAG, status.getStatusMessage());
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.

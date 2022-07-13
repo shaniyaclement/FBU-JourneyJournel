@@ -21,7 +21,7 @@ public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignUpActivity";
     private EditText etUsername;
     private EditText etPassword;
-    private Button btnRegister;
+    Button btnRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

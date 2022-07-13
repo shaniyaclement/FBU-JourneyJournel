@@ -1,6 +1,9 @@
 package com.example.journeyjournal.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,17 +12,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.journeyjournal.Activities.ComposeReminder;
 import com.example.journeyjournal.ParseConnectorFiles.Reminder;
 import com.example.journeyjournal.ParseConnectorFiles.User;
 import com.example.journeyjournal.R;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
+import android.content.pm.PackageManager;
 
-import org.w3c.dom.Text;
-
+import java.util.Date;
 import java.util.List;
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHolder> {
-    private final Context context;
+    private static Context context;
     private final List<Reminder> reminders;
 
     public User user = (User) ParseUser.getCurrentUser();
@@ -59,18 +64,55 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         // add XML element
         public TextView tvRemind;
         public TextView tvNotes;
+        public TextView tvDate;
+        public TextView tvLocationItem;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // initialize element
             tvRemind = (TextView) itemView.findViewById(R.id.tvRemind);
             tvNotes = (TextView) itemView.findViewById(R.id.tvNotes);
+            tvDate = (TextView) itemView.findViewById(R.id.tvDate);
+            tvLocationItem = (TextView) itemView.findViewById(R.id.tvLocationItem);
         }
 
         public void bind(Reminder reminder) {
             // Bind the reminder data to the view element
             tvRemind.setText(reminder.getReminder());
             tvNotes.setText(reminder.getNotes());
+            Date remindDate = reminder.getRemindDate();
+            ParseGeoPoint location = reminder.getLocation();
+            if (remindDate != null){
+                tvDate.setText(reminder.getDateString(reminder));
+            } else{
+                tvDate.setText("");
+                Log.i("remind", "date null");
+
+            }
+            if (location != null){
+                tvLocationItem.setText(reminder.getLocationName());
+            } else{
+                tvLocationItem.setText("");
+                Log.i("remind", "location null");
+            }
+
+            tvLocationItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // intent for launching Google Maps
+                    if(location != null){
+                        String latitude = Double.toString(location.getLatitude());
+                        String longitude = Double.toString(location.getLongitude());
+                        String stringParse = "google.navigation:q=" + latitude + "," + longitude;
+                        Uri gmmIntentUri = Uri.parse(stringParse);
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        if (mapIntent.resolveActivity(v.getContext().getPackageManager()) != null) {
+                            v.getContext().startActivity(mapIntent);
+                        }
+                    }
+                }
+            });
         }
     }
 }

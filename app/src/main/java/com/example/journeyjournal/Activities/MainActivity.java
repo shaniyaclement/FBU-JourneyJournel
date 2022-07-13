@@ -25,6 +25,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseUser;
 
 // activity that holds bottom navigation bar and allows it ot be accessible
+@SuppressWarnings("deprecation")
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
@@ -54,30 +55,27 @@ public class MainActivity extends AppCompatActivity {
 
         // bottom navigation bar functionality
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragmentToShow = null;
-                switch (item.getItemId()) {
-                    case R.id.action_home:
-                        fragmentToShow = homeFragment;
-                        break;
-                    case R.id.action_compose:
-                        fragmentToShow = composeFragment;
-                        break;
-                    case R.id.action_feed:
-                        fragmentToShow = feedFragment;
-                        break;
-                    case R.id.action_profile:
-                        fragmentToShow = profileFragment;
-                        break;
-                    default: break;
-                }
-                if (fragmentToShow != null) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, fragmentToShow).commit();
-                }
-                return true;
+        bottomNavigationView.setOnItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) item -> {
+            Fragment fragmentToShow = null;
+            switch (item.getItemId()) {
+                case R.id.action_home:
+                    fragmentToShow = homeFragment;
+                    break;
+                case R.id.action_compose:
+                    fragmentToShow = composeFragment;
+                    break;
+                case R.id.action_feed:
+                    fragmentToShow = feedFragment;
+                    break;
+                case R.id.action_profile:
+                    fragmentToShow = profileFragment;
+                    break;
+                default: break;
             }
+            if (fragmentToShow != null) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, fragmentToShow).commit();
+            }
+            return true;
         });
         bottomNavigationView.setSelectedItemId(R.id.action_home);
     }

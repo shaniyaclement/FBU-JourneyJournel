@@ -14,13 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.journeyjournal.Activities.ComposeJournal;
-import com.example.journeyjournal.Activities.MainActivity;
 import com.example.journeyjournal.ParseConnectorFiles.Journals;
 import com.example.journeyjournal.Adapters.JournalsAdapter;
 import com.example.journeyjournal.R;
@@ -28,7 +24,6 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +32,7 @@ public class ComposeFragment extends Fragment {
 
     private static final String TAG = "ComposeFragment";
     private SwipeRefreshLayout swipeContainer;
-    private ImageButton ibAddJournal;
+    ImageButton ibAddJournal;
     RecyclerView rvJournals;
     protected JournalsAdapter adapter;
     protected List<Journals> allJournals;
@@ -52,7 +47,7 @@ public class ComposeFragment extends Fragment {
         // query journals from the database
         Log.i(TAG, "onResume");
         adapter.clear();
-        queryJournals(0);
+        queryJournals();
     }
 
     @Override
@@ -78,7 +73,7 @@ public class ComposeFragment extends Fragment {
         rvJournals.setLayoutManager(linearLayoutManager);
         //rvPosts.setLayoutManager(new LinearLayoutManager(this));
         // query posts from Parse SDK
-        queryJournals(0);
+        queryJournals();
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -89,7 +84,7 @@ public class ComposeFragment extends Fragment {
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
 
-                queryJournals(0);
+                queryJournals();
             }
         });
         // Configure the refreshing colors
@@ -107,7 +102,7 @@ public class ComposeFragment extends Fragment {
     }
 
 
-    private void queryJournals(int i) {
+    private void queryJournals() {
         // specify what type of data we want to query - Journals.class
         ParseQuery<Journals> query = ParseQuery.getQuery(Journals.class);
         // include data referred by user key

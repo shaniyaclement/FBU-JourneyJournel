@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.example.journeyjournal.Adapters.ReminderAdapter;
 import com.example.journeyjournal.ParseConnectorFiles.Post;
@@ -31,7 +32,7 @@ public class RemindersActivity extends AppCompatActivity {
     protected ReminderAdapter adapter;
     protected List<Reminder> allReminders;
 
-    ImageButton ibReminder;
+    ImageView ivReminder;
 
     public User user = (User) ParseUser.getCurrentUser();
     @Override
@@ -48,8 +49,8 @@ public class RemindersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminders);
 
-        ibReminder = findViewById(R.id.ibReminder);
-        ibReminder.setOnClickListener(new View.OnClickListener() {
+        ivReminder = findViewById(R.id.ivReminder);
+        ivReminder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goComposeReminder();

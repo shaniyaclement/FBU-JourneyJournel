@@ -31,7 +31,7 @@ import java.util.List;
 public class CommentActivity extends AppCompatActivity {
 
     public static final String TAG = "CommentActivity";
-    private RecyclerView rvComments;
+    RecyclerView rvComments;
     protected CommentsAdapter adapter;
     protected List<Comment> allComments;
 

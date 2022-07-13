@@ -34,11 +34,11 @@ public class HelperFragment extends Fragment {
         }
 
         // Return the file target for the photo based on filename
-        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
-        return file;
+        return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
     // launches implicit intent to open the phone camera and take the photo for the post
+    @SuppressWarnings("deprecation")
     void launchCamera() {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

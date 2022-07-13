@@ -26,6 +26,7 @@ import com.parse.ParseUser;
 
 import java.io.File;
 
+@SuppressWarnings("ALL")
 public class EditProfile extends AppCompatActivity {
     private static final String TAG = "EditProfile";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
@@ -150,7 +151,7 @@ public class EditProfile extends AppCompatActivity {
         }
 
         // Return the file target for the photo based on filename
-        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
-        return file;
+        return new File(mediaStorageDir.getPath() + File.separator + fileName);
+
     }
 }

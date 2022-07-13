@@ -111,15 +111,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             // loads image into ImageView for post
             if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivImage);
-                // click image and it navigates to post details
-//                ivImage.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent i = new Intent(context, PostDetails.class);
-//                        i.putExtra("post", Parcels.wrap(post));
-//                        context.startActivity(i);
-//                    }
-                //});
             }
 
             // display profile picture on post in RecyclerView

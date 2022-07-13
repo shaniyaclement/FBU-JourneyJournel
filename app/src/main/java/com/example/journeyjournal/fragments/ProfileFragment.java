@@ -34,6 +34,7 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("deprecation")
 public class ProfileFragment extends HelperFragment {
     public static final String TAG = "ProfileFragment";
     private static final int RESULT_OK = -1;
@@ -116,7 +117,7 @@ public class ProfileFragment extends HelperFragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                queryPosts(0);
+                queryPosts();
             }
         });
 
@@ -125,7 +126,7 @@ public class ProfileFragment extends HelperFragment {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        queryPosts(0);
+        queryPosts();
 
         ivProfileImageProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,14 +157,14 @@ public class ProfileFragment extends HelperFragment {
         }
     }
 
-    protected void queryPosts(int i) {
+    protected void queryPosts() {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
 
         query.include(Post.KEY_USER);
         query.whereEqualTo(Post.KEY_USER, user);
 
         query.setLimit(20);
-        query.setSkip(i);
+        query.setSkip(0);
 
         query.addDescendingOrder(Post.KEY_CREATED_AT);
 

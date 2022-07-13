@@ -31,6 +31,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
+@SuppressWarnings("deprecation")
 public class ComposePostActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity" ;
@@ -126,6 +127,7 @@ public class ComposePostActivity extends AppCompatActivity {
         // So as long as the result is not null, it's safe to use the intent.
         if (intent.resolveActivity(getPackageManager()) != null) {
             // Start the image capture intent to take photo
+            //noinspection deprecation
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
     }
@@ -147,6 +149,7 @@ public class ComposePostActivity extends AppCompatActivity {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
+    @SuppressWarnings("deprecation")
     private void onUploadPhoto() {
         // Create intent for picking a photo from the gallery
         Intent intent = new Intent(Intent.ACTION_PICK,
