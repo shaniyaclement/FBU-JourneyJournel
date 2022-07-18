@@ -7,7 +7,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,8 +32,10 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -71,11 +76,13 @@ public class ComposeReminder extends AppCompatActivity {
 
     public User user = (User) ParseUser.getCurrentUser();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose_reminder);
+
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
         // attached variables to XML elements
         tvDone = findViewById(R.id.tvDone);
@@ -169,6 +176,20 @@ public class ComposeReminder extends AppCompatActivity {
         reminder.setLocationName(locationName);
         if(date!= null){reminder.setRemindDate(date);}
         if(location != null) {reminder.setLocation(location);}
+        reminder.pinAllInBackground(allReminders, new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error adding reminder", e);
+                    return;
+                }
+                etRemind.setText("");
+                etNotes.setText("");
+                tvDateEntry.setText("");
+                queryReminders();
+                finish();
+            }
+        });
 
         reminder.saveInBackground(new SaveCallback() {
             @Override
@@ -222,6 +243,7 @@ public class ComposeReminder extends AppCompatActivity {
             }
         });
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

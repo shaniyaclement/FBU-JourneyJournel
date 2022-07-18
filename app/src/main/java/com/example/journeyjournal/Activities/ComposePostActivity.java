@@ -4,7 +4,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.example.journeyjournal.Adapters.PostsAdapter;
+import com.example.journeyjournal.Adapters.ReminderAdapter;
 import com.example.journeyjournal.ParseConnectorFiles.Post;
+import com.example.journeyjournal.ParseConnectorFiles.Reminder;
 import com.example.journeyjournal.ParseConnectorFiles.User;
 import com.example.journeyjournal.R;
 import com.parse.ParseException;
@@ -30,6 +33,8 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class ComposePostActivity extends AppCompatActivity {
@@ -42,10 +47,11 @@ public class ComposePostActivity extends AppCompatActivity {
     Button btnUpload;
     Button btnPost;
     ImageView ivImage;
+    protected PostsAdapter adapter;
+    protected List<Post> allPosts;
 
     File photoFile;
     public String photoFileName = "photo.jpg";
-    private File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +63,9 @@ public class ComposePostActivity extends AppCompatActivity {
         btnUpload = findViewById(R.id.btnUpload);
         btnPost = findViewById(R.id.btnPost);
         ivImage = findViewById(R.id.ivImage);
+
+        allPosts = new ArrayList<>();
+        adapter = new PostsAdapter(this, allPosts);
 
         btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,34 +89,13 @@ public class ComposePostActivity extends AppCompatActivity {
                 launchCamera();
             }
         });
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               onUploadPhoto();
-            }
-        });
+//        btnUpload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//               onUploadPhoto();
+//            }
+//        });
 
-    }
-
-    // create a new post and saves to app
-    private void savePost(String description, User currentUser, File photoFile) {
-        Post post = new Post();
-        post.setDescription(description);
-        post.setImage(new ParseFile(this.photoFile));
-        post.setUser(currentUser);
-        post.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e != null){
-                    Log.e(TAG, "Error while saving", e);
-                    Toast.makeText(ComposePostActivity.this, "Error while saving", Toast.LENGTH_SHORT).show();
-                }
-                Log.i(TAG, "Post was successful");
-                etDescription.setText("");
-                ivImage.setImageResource(0);
-                finish();
-            }
-        });
     }
 
 
@@ -116,10 +104,10 @@ public class ComposePostActivity extends AppCompatActivity {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Create a File reference for future access
-        file = getPhotoFileUri(photoFileName);
+        photoFile = getPhotoFileUri(photoFileName);
 
         // wrap File object into a content provider, needed for URI >= 24
-        Uri fileProvider = FileProvider.getUriForFile(this, "com.codepath.fileprovider", file);
+        Uri fileProvider = FileProvider.getUriForFile(this, "com.codepath.fileprovider", photoFile);
         //make app a file provider
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
@@ -149,38 +137,38 @@ public class ComposePostActivity extends AppCompatActivity {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
-    @SuppressWarnings("deprecation")
-    private void onUploadPhoto() {
-        // Create intent for picking a photo from the gallery
-        Intent intent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    // create a new post and saves to app
+    private void savePost(String description, User currentUser, File photoFile) {
+        Post post = new Post();
+        post.setDescription(description);
+        post.setImage(new ParseFile(this.photoFile));
+        post.setUser(currentUser);
 
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            // Bring up gallery to select a photo
-            startActivityForResult(intent, PICK_PHOTO_CODE);
-        } else{
-            Log.i("Upload", "No launch");
-        }
-    }
-
-    public Bitmap loadFromUri(Uri photoUri) {
-        Bitmap image = null;
-        try {
-            // check version of Android on device
-            if(Build.VERSION.SDK_INT > 27){
-                // on newer versions of Android, use the new decodeBitmap method
-                ImageDecoder.Source source = ImageDecoder.createSource(this.getContentResolver(), photoUri);
-                image = ImageDecoder.decodeBitmap(source);
-            } else {
-                // support older versions of Android by using getBitmap
-                image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+        post.pinAllInBackground(allPosts, new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error adding reminder", e);
+                    return;
+                }
+                Log.i(TAG, "Post was successful");
+                etDescription.setText("");
+                ivImage.setImageResource(0);
+                finish();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return image;
+        });
+        post.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e != null){
+                    Log.e(TAG, "Error while saving", e);
+                    Toast.makeText(ComposePostActivity.this, "Error while saving", Toast.LENGTH_SHORT).show();
+                }
+                Log.i(TAG, "Post was successful");
+                etDescription.setText("");
+                ivImage.setImageResource(0);
+            }
+        });
     }
 
     @Override
@@ -188,23 +176,11 @@ public class ComposePostActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         // switch case changes how the method is used based on how it is triggered
         switch (requestCode) {
-            // convert photo to a ParseFile
-            case (PICK_PHOTO_CODE):
-                if ((data != null)) {
-                    Uri photoUri = data.getData();
-
-                    // load the image located at photoUri into selectedImage
-                    Bitmap selectedImage = loadFromUri(photoUri);
-
-                    // load image into the preview
-                    ivImage.setImageBitmap(selectedImage);
-                }
-                break;
             //  adds taken image to image preview
             case (CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE):
                 if (resultCode == RESULT_OK) {
                     // by this point we have the camera photo on disk
-                    Bitmap takenImage = BitmapFactory.decodeFile(file.getAbsolutePath());
+                    Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                     // RESIZE BITMAP, see section below
                     // compresses image for successful Parse upload
                     // Load the taken image into a preview

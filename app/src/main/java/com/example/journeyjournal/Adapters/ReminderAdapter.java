@@ -12,13 +12,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.journeyjournal.Activities.ComposeReminder;
 import com.example.journeyjournal.ParseConnectorFiles.Reminder;
 import com.example.journeyjournal.ParseConnectorFiles.User;
 import com.example.journeyjournal.R;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
-import android.content.pm.PackageManager;
 
 import java.util.Date;
 import java.util.List;

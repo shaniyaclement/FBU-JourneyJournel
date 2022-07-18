@@ -1,8 +1,11 @@
 package com.example.journeyjournal.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.example.journeyjournal.Activities.ComposePostActivity;
 import com.example.journeyjournal.Activities.EditProfile;
 import com.example.journeyjournal.ParseConnectorFiles.User;
 import com.example.journeyjournal.ParseConnectorFiles.Post;
@@ -85,6 +89,16 @@ public class ProfileFragment extends HelperFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rvProfile = view.findViewById(R.id.rvProfile);
+        ConnectivityManager connManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        if(getActivity() == null){
+            Log.i(TAG, "grtActivity() is null");
+            return;
+        } else{
+            Log.i(TAG, "getActivity() is not null");
+
+        }
 
         allPosts = new ArrayList<>();
 
@@ -107,8 +121,12 @@ public class ProfileFragment extends HelperFragment {
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), EditProfile.class);
-                startActivity(intent);
+                if(wifi.isConnected()){
+                    Intent intent = new Intent(getContext(), EditProfile.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getContext(), "Please connect to the internet", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -117,21 +135,33 @@ public class ProfileFragment extends HelperFragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                queryPosts();
-            }
+                if(wifi.isConnected()){
+                    queryPosts();
+                } else {
+                    querySavedPosts();
+                }            }
         });
 
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-        queryPosts();
+        if(wifi.isConnected()){
+            queryPosts();
+        } else {
+            querySavedPosts();
+        }
 
         ivProfileImageProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchCamera();
+                ConnectivityManager connManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                if(wifi.isConnected()){
+                    launchCamera();
+                } else {
+                    Toast.makeText(getContext(), "Please connect to the internet", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -198,6 +228,49 @@ public class ProfileFragment extends HelperFragment {
                 allPosts.clear();
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
+
+            }
+        });
+    }
+
+    protected void querySavedPosts() {
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.include(Post.KEY_USER);
+        query.whereEqualTo(Post.KEY_USER, user);
+        query.addDescendingOrder("createdAt");
+        query.fromLocalDatastore();
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> posts, ParseException e) {
+                Log.i(TAG, posts.toString());
+
+                if (e != null) {
+                    Log.e(TAG, "Issue getting posts.", e);
+                    return;
+                }
+
+                // at this point, we have gotten the posts successfully
+                for (Post post : posts) {
+                    Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
+                }
+
+                // sets Number of posts
+                numPostsByThisUser = posts.size();
+                tvPostsNum.setText(String.valueOf(numPostsByThisUser));
+
+                //sets number of followers
+                numsFollowers = posts.size();
+                tvFollowersNum.setText(String.valueOf(numsFollowers));
+
+                //sets number of following
+                numsFollowing = posts.size();
+                tvFollowingNum.setText(String.valueOf(numsFollowing));
+
+                allPosts.clear();
+                allPosts.addAll(posts);
+                adapter.notifyDataSetChanged();
+                swipeContainer.setRefreshing(false);
+
 
             }
         });

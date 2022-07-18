@@ -1,17 +1,12 @@
 package com.example.journeyjournal.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.view.Menu;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -27,6 +22,12 @@ import com.parse.ParseUser;
 // activity that holds bottom navigation bar and allows it ot be accessible
 @SuppressWarnings("deprecation")
 public class MainActivity extends AppCompatActivity {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.action_buttons, menu);
+        return true;
+    }
 
     public static final String TAG = "MainActivity";
 
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(this.getResources().getColor(R.color.themeTan));
         }
+
 
         // bottom navigation bar functionality
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
